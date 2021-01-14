@@ -9,9 +9,9 @@ defined('ABSPATH') || exit;
 class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 {
 	/**
-	 * Schema level
+	 * Schema logger
 	 *
-	 * @var null|Wc1c_Schema_Logger
+	 * @var Wc1c_Schema_Logger
 	 */
 	private $logger = null;
 
@@ -32,9 +32,9 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 	/**
 	 * Initialize
 	 *
-	 * @throws Exception
-	 *
 	 * @return bool
+	 *
+	 * @throws Wc1c_Exception_Runtime
 	 */
 	public function init()
 	{
@@ -44,12 +44,12 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 		}
 		catch(Exception $e)
 		{
-			throw new Exception('init: - ' . $e);
+			throw new Wc1c_Exception_Runtime('init: - ' . $e);
 		}
 
 		if(false === $this->init_logger())
 		{
-			throw new Exception('init: load_logger error');
+			throw new Wc1c_Exception_Runtime('init: load_logger error');
 		}
 
 		$this->set_options($this->configuration()->get_options());
@@ -99,7 +99,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 
 		WC1C()->environment()->set('wc1c_current_schema_upload_directory', $this->get_upload_directory());
 	}
-	
+
 	/**
 	 * Initializing logger
 	 */
@@ -110,7 +110,9 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 
 		try
 		{
-			$logger = new Wc1c_Schema_Logger($path, $level, 'main.log');
+			$logger = new Wc1c_Schema_Logger($level, 'main.log');
+			$logger->set_path($path);
+			$logger->init();
 		}
 		catch(Exception $e)
 		{
@@ -324,12 +326,9 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 
 		$size_max_manual = wc1c_convert_size($this->get_options('post_file_max_size'));
 
-		if($size_max_manual)
+		if($size_max_manual && $size_max_manual < $size)
 		{
-			if($size_max_manual < $size)
-			{
-				$size = $size_max_manual;
-			}
+			$size = $size_max_manual;
 		}
 
 		return $size;
@@ -349,16 +348,16 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 			header('Content-Type: text/html; charset=Windows-1251');
 		}
 
-		if($type == 'success')
+		if($type === 'success')
 		{
-			echo "success\n";
+			echo 'success' . PHP_EOL;
 		}
 		else
 		{
-			echo "failure\n";
+			echo 'failure' . PHP_EOL;
 		}
 
-		if($description != '')
+		if($description !== '')
 		{
 			echo $description;
 		}
@@ -527,8 +526,8 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 			$user_password = '1234567890qwertyuiop';
 		}
 
-		echo "success\n";
-		echo "wc1c_" . $this->get_id() . "\n";
+		echo 'success' . PHP_EOL;
+		echo 'wc1c_' . $this->get_id() . PHP_EOL;
 		echo md5($user_password);
 		exit;
 	}
@@ -571,8 +570,8 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 
 		$this->logger()->debug('api_handler_mode_init: $data', $data);
 
-		echo $data[0] . "\n";
-		echo $data[1] . "\n";
+		echo $data[0] . PHP_EOL;
+		echo $data[1] . PHP_EOL;
 		exit;
 	}
 
@@ -2366,9 +2365,9 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 			if($attribute_id === 0)
 			{
 				$attribute_data =
-				[
-					'name' => $classifier_property['property_name']
-				];
+					[
+						'name' => $classifier_property['property_name']
+					];
 
 				try
 				{
@@ -2607,7 +2606,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 		{
 			$this->logger()->info('extract_zip: unpack images count - ' . $img_files);
 		}
-		
+
 		if($error_files > 0)
 		{
 			$this->logger()->error('extract_zip: unpack error files - ' . $img_files);
