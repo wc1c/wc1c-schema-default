@@ -2337,7 +2337,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 			throw new Exception('processing_classifier_properties: $classifier_properties is not array');
 		}
 
-		if(sizeof($classifier_properties) < 1)
+		if(count($classifier_properties) < 1)
 		{
 			return true;
 		}
