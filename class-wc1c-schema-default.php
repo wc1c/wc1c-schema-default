@@ -1942,7 +1942,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 	 */
 	private function processing_classifier_groups($classifier_groups = [])
 	{
-		if($this->is_import_full() !== true)
+		if($this->is_import_full() === false)
 		{
 			return true;
 		}
@@ -2254,7 +2254,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 		$classifier_data['classifier_guid'] = (string)$xml_classifier_data->Ид;
 		$classifier_data['classifier_name'] = (string)$xml_classifier_data->Наименование;
 
-		$this->logger()->debug('parse_xml_classifier: $data ', $classifier_data);
+		$this->logger()->info('parse_xml_classifier: classifier_guid ' . $classifier_data['classifier_guid'] . ', classifier_name ' . $classifier_data['classifier_name']);
 
 		/**
 		 * Группы
