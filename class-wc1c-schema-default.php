@@ -824,7 +824,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 			catch(Exception $e)
 			{
 				$this->logger()->error('file_processing: exception - ' . $e->getMessage());
-				return false;
+				throw new Exception('file_processing: exception - ' . $e->getMessage());
 			}
 
 			$this->logger()->info('file_processing: classifier_processing end');
@@ -846,7 +846,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 			catch(Exception $e)
 			{
 				$this->logger()->info('file_processing: exception - ' . $e->getMessage());
-				return false;
+				throw new Exception('file_processing: exception - ' . $e->getMessage());
 			}
 
 			$this->logger()->info('file_processing: catalog_processing end, success');
@@ -868,7 +868,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 			catch(Exception $e)
 			{
 				$this->logger()->info('file_processing: exception - ' . $e->getMessage());
-				return false;
+				throw new Exception('file_processing: exception - ' . $e->getMessage());
 			}
 
 			$this->logger()->info('file_processing: offers_package_processing end, success');
