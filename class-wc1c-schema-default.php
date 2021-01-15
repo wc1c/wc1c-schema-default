@@ -741,6 +741,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 		catch(Exception $e)
 		{
 			$this->logger()->error('api_handler_catalog_mode_import: exception - ' . $e->getMessage(), $e);
+			$this->api_handler_response_by_type('failure', 'Импорт завершен с ошибкой. ' . $e->getMessage());
 		}
 
 		if($result_file_processing)
