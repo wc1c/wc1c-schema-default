@@ -308,7 +308,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 	/**
 	 * Get logger
 	 *
-	 * @return Wc1c_Schema_Logger|null
+	 * @return Wc1c_Schema_Logger
 	 */
 	protected function logger()
 	{
@@ -728,7 +728,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 			$this->api_handler_response_by_type('failure', __('Import filename is empty.', 'wc1c'));
 		}
 
-		$file = $this->get_upload_directory() . '/catalog/' . sanitize_file_name($filename);
+		$file = $this->get_upload_directory() . '/catalog/' . $filename;
 
 		$this->logger()->info('api_handler_catalog_mode_import: file_processing - start');
 
@@ -743,7 +743,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 			$this->logger()->error('api_handler_catalog_mode_import: exception - ' . $e->getMessage(), $e);
 		}
 
-		if($result_file_processing !== false)
+		if($result_file_processing)
 		{
 			if($this->get_options('delete_files_after_processing', 'no') === 'yes')
 			{
@@ -768,19 +768,19 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 	 */
 	private function file_processing($file_path)
 	{
-		$type_file = $this->file_type_detect($file_path);
-
-		$this->logger()->info('file_processing: type_file - ' . $type_file);
-
 		if(!is_file($file_path))
 		{
 			throw new Exception('file_processing: $file_path is not file');
 		}
 
+		$type_file = $this->file_type_detect($file_path);
+
 		if($type_file === '')
 		{
 			throw new Exception('file_processing: $type_file is not valid');
 		}
+
+		$this->logger()->info('file_processing: type_file - ' . $type_file);
 
 		if(!defined('LIBXML_VERSION'))
 		{
@@ -798,8 +798,8 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 
 		if(!$xml_data)
 		{
-			$this->logger()->error('file_processing: xml errors, end & false', libxml_get_errors());
-			return false;
+			$this->logger()->error('file_processing: xml errors', libxml_get_errors());
+			throw new Exception('file_processing: xml errors');
 		}
 
 		if($this->get_options('skip_file_processing', 'yes') === 'yes')
