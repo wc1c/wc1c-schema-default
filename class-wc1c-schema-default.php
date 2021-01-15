@@ -2611,11 +2611,11 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 
 				$import_files = $this->file_type_detect($name);
 
-				if($import_files == 'import_files')
+				if($import_files === 'import_files')
 				{
 					$result = $this->extract_zip_image($zip_archive, $zip_entry, substr($name, $import_files));
 
-					if($result == false)
+					if($result === false)
 					{
 						$error_files++;
 					}
@@ -2626,7 +2626,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 				{
 					$result = $this->extract_zip_xml($zip_archive, $zip_entry, $name);
 
-					if($result == false)
+					if($result === false)
 					{
 						$error_files++;
 					}
@@ -2671,7 +2671,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 		/**
 		 * Directory
 		 */
-		if(substr($name, -1) == "/")
+		if(substr($name, -1) === '/')
 		{
 			if(is_dir($uploads_files_dir . $name))
 			{
@@ -2819,7 +2819,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 				}
 				else
 				{
-					$fd = @fopen($import_files_dir . $name, "wb");
+					$fd = @fopen($import_files_dir . $name, 'wb');
 
 					if($fd === false)
 					{
