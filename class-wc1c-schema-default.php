@@ -794,7 +794,7 @@ class Wc1c_Schema_Default extends Wc1c_Abstract_Schema
 
 		libxml_use_internal_errors(true);
 
-		$xml_data = simplexml_load_file($file_path);
+		$xml_data = simplexml_load_string(file_get_contents($file_path));
 
 		if(!$xml_data)
 		{
